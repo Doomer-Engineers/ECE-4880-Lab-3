@@ -5,10 +5,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+    //Model in MVC
 
+    //PK
     @Id
     @Column(nullable = false, unique = true)
-    private String id;
+    private Long id;
 
     @Column(nullable = false, length = 45)
     private String role;
@@ -19,11 +21,11 @@ public class User {
     @Column(nullable = false, length = 45)
     private String password;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
