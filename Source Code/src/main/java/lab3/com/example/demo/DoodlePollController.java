@@ -1,6 +1,7 @@
 package lab3.com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,24 @@ public class DoodlePollController {
     //once user submits view, the page will come here.
     @PostMapping("/register")
     public String processRegistration(@ModelAttribute("user") User user, Model model){
-        return "redirect:index";
+
+        User checkUserValid = uRepo.findByUsername(user.getUsername());
+        if(checkUserValid != null){
+            model.addAttribute("inUse", user.getUsername());
+            return "signup";
+        }
+        ValidPassword uvp = new ValidPassword();
+        if(uvp.hasErrors(user.getPassword()) && user.getPassword() != null){
+            model.addAttribute("errors", uvp.getErrors());
+            return "signup";
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setStatus("active");
+        user.setRole("general");
+        uRepo.save(user);
+        return "index";
     }
 
 

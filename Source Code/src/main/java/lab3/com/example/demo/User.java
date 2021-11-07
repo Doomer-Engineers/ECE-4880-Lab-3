@@ -10,6 +10,7 @@ public class User {
     //PK
     @Id
     @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 45)
@@ -18,8 +19,11 @@ public class User {
     @Column(nullable = false, length = 45)
     private String username;
 
-    @Column(nullable = false, length = 45)
+    @Column(nullable = false, length = 60)
     private String password;
+
+    @Column(nullable = false, length = 45)
+    private String status;
 
     public Long getId() {
         return id;
@@ -52,4 +56,10 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) { this.status = status; }
 }
