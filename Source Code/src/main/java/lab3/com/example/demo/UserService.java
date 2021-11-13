@@ -17,7 +17,7 @@ public class UserService implements UserDetailsService {
         if (user==null){
             throw new UsernameNotFoundException("User not found");
         }
-        return new lab3.com.example.demo.UserDetails(user);
+        return new UserDetailsDP(user);
     }
 }
 

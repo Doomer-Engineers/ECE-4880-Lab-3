@@ -5,11 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 //for security stuff, don't copy this.
-public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+public class UserDetailsDP implements org.springframework.security.core.userdetails.UserDetails {
 
     private User user;
 
-    public UserDetails(User user){
+    public UserDetailsDP(User user){
         this.user=user;
     }
 

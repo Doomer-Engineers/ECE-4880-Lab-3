@@ -7,6 +7,8 @@ public class ValidPassword {
 
     private boolean truth;
 
+    private String checkPW;
+
     private ArrayList<String> errors = new ArrayList<>();
 
     public List<String> getErrors(){
@@ -54,6 +56,14 @@ public class ValidPassword {
         }
         truth = (numbers.length() == 0 || upLetters.length() == 0 || lowLetters.length() ==0|| specialCase.length() == 0 || whiteSpace != 0);
         return truth;
+    }
+
+    public String getCheckPW() {
+        return checkPW;
+    }
+
+    public void setCheckPW(String checkPW) {
+        this.checkPW = checkPW;
     }
 }
 
