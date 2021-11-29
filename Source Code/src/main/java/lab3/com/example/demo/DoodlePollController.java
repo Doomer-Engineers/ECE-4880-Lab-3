@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class DoodlePollController {
     //autowired repos here
@@ -89,5 +91,12 @@ public class DoodlePollController {
             username = principal.toString();
         }
         return uRepo.findByUsername(username);
+    }
+
+    @GetMapping("/list_slots")
+    public String viewSlotsList(Model model) {
+        List<Slots> listSlots = sRepo.findByPollID((long)1);
+        model.addAttribute("listSlots", listSlots);
+        return "pollDisplay";
     }
 }

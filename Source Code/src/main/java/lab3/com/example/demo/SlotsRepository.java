@@ -10,5 +10,5 @@ public interface SlotsRepository extends JpaRepository<Slots, Long>{
     lab3.com.example.demo.Slots findBySlotID(Long SlotID);
 
     @Query("SELECT s FROM Slots s WHERE s.PollID = ?1")
-    List<lab3.com.example.demo.Poll> findByPollID(Long PollID);
+    List<lab3.com.example.demo.Slots> findByPollID(Long PollID);
 }
