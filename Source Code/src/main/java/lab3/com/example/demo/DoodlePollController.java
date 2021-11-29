@@ -93,10 +93,13 @@ public class DoodlePollController {
         return uRepo.findByUsername(username);
     }
 
-    @GetMapping("/list_slots")
-    public String viewSlotsList(Model model) {
-        List<Slots> listSlots = sRepo.findByPollID((long)1);
-        model.addAttribute("listSlots", listSlots);
-        return "pollDisplay";
+    @GetMapping("/list_events")
+    public String viewEventsList(Model model){
+        List<Slots> listEvents = sRepo.findByPollID((long)1);
+        model.addAttribute("listEvents", listEvents);
+        User loggedInUser = getLoggedInUser();
+        if (loggedInUser!=null) model.addAttribute("user", loggedInUser);
+        return "yeet";
     }
+
 }
