@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
@@ -95,14 +96,27 @@ public class DoodlePollController {
         return uRepo.findByUsername(username);
     }
 
-    @GetMapping("/list_events")
-    public String viewEventsList(Model model){
-        List<Slots> listEvents = sRepo.findByPollID((long)1);
+    @GetMapping("/poll_display/{id}")
+    public String viewPoll(Model model, @PathVariable(value = "id") Long id){
+        Poll pollInfo = pRepo.findByPollID(id);
+        if(pollInfo == null){
+            return "index";
+        }
+        List<Slots> listSlots = sRepo.findByPollID(id);
 //        System.out.println(listEvents.get(0).getSlotID());
-        model.addAttribute("listEvents", listEvents);
+        model.addAttribute("pollInfo",pollInfo);
+        model.addAttribute("listSlots", listSlots);
 //        User loggedInUser = getLoggedInUser();
 //        if (loggedInUser!=null) model.addAttribute("user", loggedInUser);
-        return "yeet";
+        return "pollDisplay";
+    }
+
+    //TODO make this page change based on who's logged in
+    @GetMapping("/polls")
+    public String viewPollList(Model model){
+        List<Poll> polls = pRepo.findByUserID((long) 1);
+        model.addAttribute("polls",polls);
+        return "pollList";
     }
 
 }
