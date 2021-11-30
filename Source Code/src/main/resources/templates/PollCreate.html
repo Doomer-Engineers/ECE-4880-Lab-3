@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link  rel= "stylesheet" type= "text/css" href= "style.css">
+  <meta charset="UTF-8">
+  <title>Create Poll</title>
+</head>
+<body>
+<form method="POST">
+  <div class="container">
+    <label for="Title">Enter Title</label>
+    <input id="Title" name = "Title" required>votes per slot<br>
+    <label for="votesperslot"></label>
+    <input id="votesperslot" name = "votesperslot" value="1" required><br>
+    <div class="nativeDateTimePicker">
+      <label for="meetingStart">Choose meetings start time:</label>
+      <input type="datetime-local" id="meetingStart" name="meetingStart">
+      <span class="validity"></span>
+    </div>
+    <div class="nativeDateTimePicker">
+      <label for="meetingEnd">Choose meetings end time:</label>
+      <input type="datetime-local" id="meetingEnd" name="meetingEnd">
+      <span class="validity"></span>
+    </div>
+    <span>
+            <label for="timeornumber">Split by time or number of slots:</label>
+        <select id="timeornumber" name="timeornumber">
+            <option selected>Slot Time</option>
+            <option>Number of slots</option>
+        </select>
+            </span>
+    <label for="slot">Enter time or number of slots:</label>
+    <input id="slot" name = "slot" required><br>
+
+    <div class="nativeDateTimePicker">
+      <label for="deadline">Choose deadline:</label>
+      <input type="datetime-local" id="deadline" name="deadline">
+      <span class="validity"></span>
+    </div>
+    <label for="description">Notes</label>
+    <textarea input type="text" id="description" name = "description" required class="textarea"></textarea><br>
+    <input type="submit" id="submit" name="submit"><br>
+  </div>
+
+</form>
+</body>
+</html>
