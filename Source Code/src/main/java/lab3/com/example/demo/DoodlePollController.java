@@ -18,7 +18,9 @@ public class DoodlePollController {
     //need repos created
     @Autowired
     private UserRepository uRepo;
+    @Autowired
     private PollRepository pRepo;
+    @Autowired
     private SlotsRepository sRepo;
 
     //model attributes to be placed on page
@@ -96,9 +98,10 @@ public class DoodlePollController {
     @GetMapping("/list_events")
     public String viewEventsList(Model model){
         List<Slots> listEvents = sRepo.findByPollID((long)1);
+//        System.out.println(listEvents.get(0).getSlotID());
         model.addAttribute("listEvents", listEvents);
-        User loggedInUser = getLoggedInUser();
-        if (loggedInUser!=null) model.addAttribute("user", loggedInUser);
+//        User loggedInUser = getLoggedInUser();
+//        if (loggedInUser!=null) model.addAttribute("user", loggedInUser);
         return "yeet";
     }
 
