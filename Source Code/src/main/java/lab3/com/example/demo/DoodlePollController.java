@@ -119,4 +119,15 @@ public class DoodlePollController {
         return "pollList";
     }
 
+    @GetMapping("/create_poll")
+    public String getCreatePoll(){
+        return "PollCreate";
+    }
+
+    @PostMapping("/create_poll")
+    public String createPoll(Model model, @ModelAttribute("poll") Poll poll){
+        poll.setUserID((long) 1);
+        pRepo.save(poll);
+    }
+
 }
