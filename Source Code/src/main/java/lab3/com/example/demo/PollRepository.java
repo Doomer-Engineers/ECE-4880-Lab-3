@@ -12,4 +12,6 @@ public interface PollRepository extends JpaRepository<Poll, Long> {
 
     @Query("SELECT p FROM Poll p WHERE p.UserID = ?1")
     List<lab3.com.example.demo.Poll> findByUserID(Long UserID);
+
+
 }

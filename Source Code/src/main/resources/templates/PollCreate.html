@@ -9,9 +9,9 @@
 <form method="POST">
   <div class="container">
     <label for="Title">Enter Title:</label>
-    <input id="Title" name = "Title" required><br>
+    <input id="Title" name = "Title" th:field="${pollInput.Title}" required><br>
     <label for="votesperslot">Votes Per Slot:</label>
-    <input id="votesperslot" name = "votesperslot" value="1" required><br>
+    <input id="votesperslot" name = "votesperslot" th:field="${pollInput.VotesPer}" value="1" required><br>
 <!--    <div class="nativeDateTimePicker">-->
 <!--      <label for="meetingStart">Choose meetings start time:</label>-->
 <!--      <input type="datetime-local" id="meetingStart" name="meetingStart">-->
@@ -31,13 +31,13 @@
 <!--    </span>-->
     <span>
         <label for="timezone">Timezone:</label>
-        <select id="timezone" name="timeornumber">
-          <option selected>Eastern</option>
-          <option>Central</option>
-          <option>Mountain</option>
-          <option>Pacific</option>
-          <option>Alaska</option>
-          <option>Hawaii</option>
+        <select id="timezone" name="timeornumber" th:field="${pollInput.TimeZone}">
+          <option selected th:value="'Eastern'" th:text="Eastern">Eastern</option>
+          <option th:value="'Central'" th:text="Central">Central</option>
+          <option th:value="'Mountain'" th:text="Mountain">Mountain</option>
+          <option th:value="'Pacific'" th:text="Pacific">Pacific</option>
+          <option th:value="'Alaska'" th:text="Alaska">Alaska</option>
+          <option th:value="'Hawaii'" th:text="Hawaii">Hawaii</option>
         </select>
     </span>
 <!--    <label for="slot">Enter time or number of slots:</label>-->
@@ -45,14 +45,15 @@
 
     <div class="nativeDateTimePicker">
       <label for="deadline">Choose deadline:</label>
-      <input type="datetime-local" id="deadline" name="deadline">
+      <input type="datetime-local" id="deadline" th:field="${pollInput.Deadline}" name="deadline" >
       <span class="validity"></span>
     </div>
     <label for="Loc">Location:</label>
-    <input id="Loc" name = "L" ><br>
+    <input id="Loc" name = "L" th:field="${pollInput.Location}"><br>
 
     <label for="description">Notes:</label>
-    <textarea input type="text" id="description" name = "description"  class="textarea"></textarea><br>
+    <textarea input type="text" id="description" name = "description"  class="textarea" th:field="${pollInput.Notes}"></textarea><br>
+
     <input type="submit" id="submit" name="submit"><br>
   </div>
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -120,14 +121,21 @@ public class DoodlePollController {
     }
 
     @GetMapping("/create_poll")
-    public String getCreatePoll(){
+    public String getCreatePoll(Model model ){
+        Poll poll = new Poll();
+        model.addAttribute("pollInput",poll);
         return "PollCreate";
     }
 
     @PostMapping("/create_poll")
-    public String createPoll(Model model, @ModelAttribute("poll") Poll poll){
+    public String createPoll(Model model, @ModelAttribute("pollInput") Poll poll){
         poll.setUserID((long) 1);
         pRepo.save(poll);
+//        Long pollID = savedPoll.getPollID();
+
+        return "index";
+
+//        return new ModelAndView("redirect/poll_display/" + pollID.toString());
     }
 
 }

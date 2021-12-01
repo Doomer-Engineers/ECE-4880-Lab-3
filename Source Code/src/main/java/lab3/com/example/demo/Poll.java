@@ -16,26 +16,26 @@ public class Poll {
     private Long PollID;
 
     @Column(nullable = false)
-    private Long UserID;
+    public Long UserID;
 
     @Column(nullable = false, length = 45)
-    private String Title;
+    public String Title;
 
     @Column(length = 45)
-    private String Location;
+    public String Location;
 
     @Column(length = 45)
-    private String Notes;
+    public String Notes;
 
     @Column(nullable = false, length = 45)
-    private String TimeZone;
+    public String TimeZone;
 
     @Column(nullable = false)
-    private Integer VotesPer;
+    public Integer VotesPer;
 
     @Column(nullable = false, length = 45)
     @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date Deadline;
+    public java.util.Date Deadline;
 
     public Long getPollID() {
         return PollID;
