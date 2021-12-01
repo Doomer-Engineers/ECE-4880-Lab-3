@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Index - DoodlePool</title>
-    <!--change this for react-->
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body>
 <div class="container text-center">
     <div>
-        <h1>Welcome to DOOMER ENGINEER'S DOODLE POOL!</h1>
+        <p>
+            Welcome <b>[[${#request.userPrincipal.principal.username}]]</b>
+        </p>
     </div>
     <div>
-        <h3><a th:href="@{register}">Register</a></h3>
-        <h3><a th:href="@{index}">Index</a></h3>
-        <h3><a th:href="@{login}">Login</a></h3>
-        <h3><a th:href="@{find_poll}">Find Poll</a></h3>
+        <h3><a th:href="@{create_poll}">Create Polls</a></h3>
+        <h3><a th:href="@{polls}">View Polls</a></h3>
     </div>
 </div>
 </body>

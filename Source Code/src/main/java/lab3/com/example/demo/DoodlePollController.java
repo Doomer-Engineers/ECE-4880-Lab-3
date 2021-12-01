@@ -1,6 +1,7 @@
 package lab3.com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.ParameterOutOfBoundsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -42,7 +44,7 @@ public class DoodlePollController {
         //this will redirect to doodle poll view
         //doodle pool view will then have sign up button
         //index page will be used for testing purposes only
-        return "index";
+        return "redirect:/index";
     }
 
     @GetMapping("/index")
@@ -112,16 +114,25 @@ public class DoodlePollController {
         return "pollDisplay";
     }
 
-    //TODO make this page change based on who's logged in
     @GetMapping("/polls")
     public String viewPollList(Model model){
-        List<Poll> polls = pRepo.findByUserID((long) 1);
+        User user = getLoggedInUser();
+        if (user == null){
+            //change later to find the poll id page
+            return "redirect:/index";
+        }
+        List<Poll> polls = pRepo.findByUserID(user.getId());
         model.addAttribute("polls",polls);
         return "pollList";
     }
 
     @GetMapping("/create_poll")
-    public String getCreatePoll(Model model ){
+    public String getCreatePoll(Model model){
+        User user  = getLoggedInUser();
+        if (user == null){
+            //change later to find the poll id page
+            return "redirect:/index";
+        }
         Poll poll = new Poll();
         model.addAttribute("pollInput",poll);
         return "PollCreate";
@@ -129,13 +140,42 @@ public class DoodlePollController {
 
     @PostMapping("/create_poll")
     public String createPoll(Model model, @ModelAttribute("pollInput") Poll poll){
-        poll.setUserID((long) 1);
+        User user  = getLoggedInUser();
+        poll.setUserID(user.getId());
         pRepo.save(poll);
 //        Long pollID = savedPoll.getPollID();
 
-        return "index";
+        return "userIndex";
 
 //        return new ModelAndView("redirect/poll_display/" + pollID.toString());
+    }
+
+    @GetMapping("/homepage")
+    public String userHomepage (Model model){
+        User user  = getLoggedInUser();
+        if (user == null){
+            //change later to find the poll id page
+            return "redirect:/index";
+        }
+        return "userIndex";
+    }
+
+    @GetMapping("/find_poll")
+    public String getPoll(Model model){
+        Poll poll = new Poll();
+        poll.setPollID(0L);
+        model.addAttribute("poll", poll);
+        return "findPoll";
+    }
+
+    @PostMapping("/find_poll/submit")
+    public String postPoll(Model model, @ModelAttribute("poll") Poll poll){
+        Poll checkPoll = pRepo.findByPollID(poll.getPollID());
+        if (checkPoll == null){
+            model.addAttribute("error", "Poll not found");
+            return "findPoll";
+        }
+        return "redirect:/poll_display/" + poll.getPollID();
     }
 
 }
