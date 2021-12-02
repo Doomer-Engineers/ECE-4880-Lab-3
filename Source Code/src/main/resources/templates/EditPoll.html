@@ -19,7 +19,6 @@
     <p th:text="'Deadline: ' + ${pollInfo.getDeadline()}">Deadline</p>
     <p th:text="'Votes allowed per person: ' + ${pollInfo.getVotesPer()}">VpP</p>
     <p th:text="'Expired?: ' + ${pollInfo.isExpired}">Expired?</p>
-    <h1 th:text="'Title: ' + ${pollInfo.getPollID()}">Poll Title</h1>
 
 
     <table class="table table-striped table-bordered">
@@ -30,6 +29,7 @@
             <th>Start</th>
             <th>End</th>
             <th>VotesPer</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>
@@ -103,7 +103,7 @@
         </div>
     </form>
 
-    <form th:action="@{'/find_poll'}" method="get" >
+    <form th:action="@{'/polls'}" method="get" >
         <input type="submit" value="Back">
     </form>
 </div>

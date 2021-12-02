@@ -214,9 +214,10 @@ public class DoodlePollController {
         poll.setUserID(user.getId());
         poll.setActive(false);
         poll.setExpired(false);
-        pRepo.save(poll);
+        Poll savedPoll = pRepo.save(poll);
+        Long id = savedPoll.getPollID();
         expirePoll();
-        return "userIndex";
+        return "redirect:/poll_display/" + id;
     }
 
     @GetMapping("/homepage")
