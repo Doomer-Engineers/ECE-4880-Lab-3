@@ -234,6 +234,34 @@ public class DoodlePollController {
         return "redirect:/poll_display/" + id;
     }
 
+    @GetMapping("/edit_poll/{id}")
+    public String editPollInfo(Model model, @PathVariable(value = "id") Long id){
+        Poll poll = pRepo.findByPollID(id);
+
+        User currUser = getLoggedInUser();
+        User pollOwner = uRepo.findByID(poll.getUserID());
+        if(currUser != pollOwner){ return "redirect:/polls";}
+
+        model.addAttribute("pollInfo", poll);
+        model.addAttribute("pollInput", new Poll());
+
+        return "editPollInfo";
+    }
+    @PostMapping("/edit_poll/{id}")
+    public String updatePollInfo(@ModelAttribute("pollInput") Poll poll, @PathVariable(value = "id") Long id){
+//        model.addAttribute("pollInput", poll);
+        System.out.println(poll.getTitle());
+        User user = getLoggedInUser();
+        poll.setUserID(user.getId());
+        poll.setActive(false);
+        poll.setExpired(false);
+        poll.setPollID(id);
+        pRepo.save(poll);
+//        Long id = savedPoll.getPollID();
+        expirePoll();
+        return "redirect:/poll_display/" + id;
+    }
+
     @GetMapping("/homepage")
     public String userHomepage (){
         User user  = getLoggedInUser();
