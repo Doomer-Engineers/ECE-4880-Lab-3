@@ -40,6 +40,12 @@ public class Poll {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     public java.util.Date Deadline;
 
+    @Column(nullable = false)
+    public boolean active;
+
+    @Column(nullable = false)
+    public boolean expired;
+
     public Long getPollID() {
         return PollID;
     }
@@ -102,5 +108,21 @@ public class Poll {
 
     public void setDeadline(Date deadline) {
         Deadline = deadline;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

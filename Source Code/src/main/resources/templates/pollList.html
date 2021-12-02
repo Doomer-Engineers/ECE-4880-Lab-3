@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>My Polls</title>
-    <!--change this for react-->
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body class="p-3 mb-2 bg-dark text-white">
@@ -11,7 +10,18 @@
     <div>
         <h1>Viewing all polls for Testing</h1>
     </div>
-<table class="table table-striped table-bordered">
+    <div class="form-group row">
+        <label class="col-form-label col-4"></label>
+        <div class="">
+            <div th:if="${message != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <p th:text="${message}"></p>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+<table class="table table-striped table-bordered bg-secondary text-dark">
     <thead class=""thread-dark>
     <tr>
         <th>Title</th>
@@ -20,6 +30,7 @@
         <th>Time Zone</th>
         <th>Deadline</th>
         <th>VotesPer</th>
+        <th>Activate</th>
     </tr>
     </thead>
     <tbody>
@@ -32,15 +43,25 @@
         <td th:text="${poll.getTimeZone()}">Time Zone</td>
         <td th:text="${poll.getDeadline()}">Deadline</td>
         <td th:text="${poll.getVotesPer()}">VotesPer</td>
+        <td><form th:if="${poll.isActive()} == false " th:action="@{'/user/poll/' + ${poll.getPollID()} + '/publish'}" method="post">
+            <div>
+                <button type="submit">Publish</button>
+            </div></form>
+            <form th:if="${poll.isActive()} == true " th:action="@{'/user/poll/' + ${poll.getPollID()} + '/unpublish'}" method="post">
+                <div>
+                    <button type="submit">Unpublish</button>
+                </div>
+            </form>
+        </td>
+
     </tr>
     </tbody>
-
-    </thead>
 </table>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <form th:action="@{'/homepage'}" method="get" >
         <input type="submit" value="Back">
     </form>
+
 </div>
 </body>
 </html>
