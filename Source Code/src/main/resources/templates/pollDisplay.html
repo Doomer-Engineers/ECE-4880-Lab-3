@@ -11,30 +11,27 @@
 
 
 
-<div >
-    <h1 th:text="'Title: ' + ${pollInfo.getTitle()}">Poll Title</h1>
-    <p th:text="'Location: ' + ${pollInfo.getLocation()}">Location</p>
-    <p th:text="'Notes: ' + ${pollInfo.getNotes()}">Notes</p>
-    <p th:text="'Time Zone: ' + ${pollInfo.getTimeZone()}">Notes</p>
-    <p th:text="'Deadline: ' + ${pollInfo.getDeadline()}">Notes</p>
-    <p th:text="'Votes allowed per person: ' + ${pollInfo.getVotesPer()}">Notes</p>
+<div class="container text-center">
+    <div class=" bg-secondary text-dark rounded">
+    <h1 th:text="'Title: ' + ${pollInfo.getTitle()}"></h1>
+    <p th:text="'Location: ' + ${pollInfo.getLocation()}"></p>
+    <p th:text="'Notes: ' + ${pollInfo.getNotes()}"></p>
+    <p th:text="'Time Zone: ' + ${pollInfo.getTimeZone()}"></p>
+    <p th:text="'Deadline: ' + ${pollInfo.getDeadline()}"></p>
+    <p th:text="'Votes allowed per person: ' + ${pollInfo.getVotesPer()}"></p>
+    </div>
 
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered bg-secondary text-dark rounded">
         <thead class=""thread-dark>
         <tr>
-            <!--            <th>Slot ID</th>-->
-            <!--            <th>Poll ID</th>-->
             <th>Start</th>
             <th>End</th>
             <th>VotesPer</th>
-
         </tr>
         </thead>
         <tbody>
 
         <tr th:each="slot: ${listSlots}">
-            <!--            <td th:text="${slot.getSlotID()}">Slot ID</td>-->
-            <!--            <td th:text="${slot.getPollID()}">Poll ID</td>-->
             <td th:text="${slot.getStartTime()}">Start</td>
             <td th:text="${slot.getEndTime()}">End</td>
             <td th:text="${slot.getVotesPer()}">VotesPer</td>
@@ -49,7 +46,9 @@
     </table>
 
     <form th:action="@{'/find_poll'}" method="get" >
-        <input type="submit" value="Back">
+        <div>
+            <button type="submit" class="btn btn-primary">Back</button>
+        </div>
     </form>
 </div>
 

@@ -37,13 +37,21 @@
         <p>
             Would you like to login?
         </p>
-        <h3><a th:href="@{login}">Yes</a></h3>
+        <form th:action="@{'/sudoLogin'}" method="get">
+            <div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </div>
+        </form>
     </div>
     <div class = "pb-2">
         <p>
             Would you like to make polls of your own?
         </p>
-        <h3><a th:href="@{register}">Of Course!</a></h3>
+        <form th:action="@{'/register'}" method="get" >
+            <div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
     </div>
 </div>
 </body>

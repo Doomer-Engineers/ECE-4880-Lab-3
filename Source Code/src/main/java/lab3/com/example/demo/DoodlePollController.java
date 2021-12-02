@@ -107,7 +107,7 @@ public class DoodlePollController {
         user.setRole("general");
         uRepo.save(user);
         expirePoll();
-        return "index";
+        return "findPoll";
     }
 
     //Might be nice later to get logged in user for verification
@@ -151,9 +151,6 @@ public class DoodlePollController {
         Date startDate = sfd.parse(ob.getStart());
         int len = ob.getLen();
         int votes = ob.getVotes();
-
-        System.out.println(id);
-
         for(int i=0; i<ob.getSlots(); i++){
             Slots newSlot = new Slots();
             newSlot.setPollID(id);
@@ -259,7 +256,9 @@ public class DoodlePollController {
         pRepo.save(poll);
 //        Long id = savedPoll.getPollID();
         expirePoll();
-        return "redirect:/poll_display/" + id;
+
+        Long id = poll.getPollID();
+        return "redirect:/poll/"+ id +"/add_slots";
     }
 
     @GetMapping("/homepage")
@@ -290,6 +289,11 @@ public class DoodlePollController {
             expirePoll();
             return "findPoll";
         }
+        if (checkPoll.isExpired()){
+            model.addAttribute("error", "Poll is expired");
+            expirePoll();
+            return "findPoll";
+        }
         expirePoll();
         return "redirect:/poll_display/" + poll.getPollID();
     }
@@ -299,13 +303,7 @@ public class DoodlePollController {
         Poll poll = pRepo.findByPollID(id);
         poll.setActive(true);
         pRepo.save(poll);
-        String message = "Poll was successfully published";
-        model.addAttribute("message", message);
-        User user = getLoggedInUser();
-        List<Poll> polls = pRepo.findByUserID(user.getId());
-        model.addAttribute("polls",polls);
-        expirePoll();
-        return "pollList";
+        return "redirect:/polls";
     }
 
     @PostMapping("/user/poll/{id}/unpublish")
@@ -313,13 +311,32 @@ public class DoodlePollController {
         Poll poll = pRepo.findByPollID(id);
         poll.setActive(false);
         pRepo.save(poll);
-        String message = "Poll was successfully unpublished";
-        model.addAttribute("message", message);
-        User user = getLoggedInUser();
-        List<Poll> polls = pRepo.findByUserID(user.getId());
-        model.addAttribute("polls",polls);
+        return "redirect:/polls";
+    }
+
+    @PostMapping("/user/poll/{id}/delete")
+    public String deletePoll(@PathVariable(value = "id") Long id){
+        Poll poll = pRepo.findByPollID(id);
+        pRepo.delete(poll);
+        return "redirect:/polls";
+    }
+
+    @GetMapping("/user/poll/{id}/edit")
+    public String getEditPoll(@PathVariable(value = "id") Long id, Model model){
+        Poll poll = pRepo.findByPollID(id);
+        model.addAttribute("pollInput", poll);
+        return "realPollEdit";
+    }
+
+    @PostMapping("/user/poll/{id}/edit")
+    public String editPoll(@ModelAttribute("pollInput") Poll poll, @PathVariable(value = "id") Long id){
+        Poll oldPoll = pRepo.findByPollID(id);
+        poll.setExpired(oldPoll.isExpired());
+        poll.setActive(oldPoll.isActive());
+        poll.setUserID(oldPoll.getUserID());
+        pRepo.save(poll);
         expirePoll();
-        return "pollList";
+        return "redirect:/polls";
     }
 
     public void expirePoll(){
@@ -328,10 +345,8 @@ public class DoodlePollController {
             LocalDateTime localDate = LocalDateTime.now();
             LocalDateTime checkDate = convertToLocalDateTimeViaInstant(poll.getDeadline());
             boolean isBeforeLocal = checkDate.isBefore(localDate);
-            if (isBeforeLocal) {
-                poll.setExpired(true);
-                pRepo.save(poll);
-            }
+            poll.setExpired(isBeforeLocal);
+            pRepo.save(poll);
         }
     }
 
@@ -339,6 +354,26 @@ public class DoodlePollController {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
+    }
+
+    @GetMapping("sudoLogin")
+    public String sudoLogin(){
+        return "redirect:/login";
+    }
+
+    @GetMapping("/poll/{id}/add_slots")
+    public String addSlots(@PathVariable(value = "id") Long id, Model model){
+        Poll poll = pRepo.findByPollID(id);
+        List <Slots> slots = sRepo.findByPollID(id);
+        boolean bool = true;
+        if (slots.size() == 0){
+            bool = false;
+        }
+        bullshit obj = new bullshit();
+        model.addAttribute("pollInfo", poll);
+        model.addAttribute("object", obj);
+        model.addAttribute("bool",bool);
+        return "createPoll";
     }
 
 }

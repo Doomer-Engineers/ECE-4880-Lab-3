@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Slots</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body class="p-3 mb-2 bg-dark text-white">
+<div class="container text-center">
+<form th:action="@{'/poll_display/' + ${pollInfo.getPollID()} + '/submit'}" method="post"
+      style="max-width: 600px; margin: 0 auto;"
+>
+    <h1>Add Slots</h1>
+    <div class="m-3">
+        <div class="form-group row">
+            <label class="col-form-label col-4"></label>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-4">Start Time</label>
+            <div class="">
+                <label>
+                    <input type="datetime-local" class="form-control" th:field="${object.start}" required/>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-4">Number of Slots</label>
+            <div class="">
+                <label>
+                    <input type="number" min=1 oninput="validity.valid||(value='');" class="form-control" th:field="${object.slots}" required/>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-4">Slots Length (minutes)</label>
+            <div class="">
+                <label>
+                    <input type="number" min=5 oninput="validity.valid||(value='');" class="form-control" th:field="${object.len}" required/>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-form-label col-4">Votes per slot</label>
+            <div class="">
+                <label>
+                    <input type="number" min=1 th:max="${pollInfo.getVotesPer()}" oninput="validity.valid||(value='');" class="form-control" th:field="${object.votes}" required/>
+                </label>
+            </div>
+        </div>
+
+
+        <div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</form>
+    <a th:if="${bool == true}" th:href = "@{'/polls'}">Back</a>
+</div>
+</body>
+</html>

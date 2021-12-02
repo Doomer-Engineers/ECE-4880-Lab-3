@@ -2,7 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head lang="en">
   <meta charset="UTF-8"/>
-  <title>ReactJS + SignUp</title>
+  <title>Create Poll</title>
   <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body class="p-3 mb-2 bg-dark text-white">
@@ -10,7 +10,7 @@
   <div>
     <h1>Create Poll</h1>
   </div>
-  <form th:action="@{/create_poll}" method="post"
+  <form th:action="@{'/create_poll'}" method="post"
         style="max-width: 600px; margin: 0 auto;"
   >
     <div class="m-3">
@@ -31,8 +31,9 @@
         <label class="col-form-label col-4">Votes per person</label>
         <div class="">
           <label>
-            <input type="number" class="form-control" th:field="${pollInput.VotesPer}"
-                   min="1" oninput="validity.valid||(value='');" required/>
+
+            <input type="number" class="form-control" min="1" oninput="validity.valid||(value='');" th:field="${pollInput.VotesPer}" required/>
+
           </label>
         </div>
       </div>
@@ -49,7 +50,8 @@
       <div class="form-group row">
         <label class="col-form-label col-4">Timezone</label>
         <div class="">
-          <select class="form-control" th:field="${pollInput.TimeZone}">
+          <select class="form-control" th:field="${pollInput.TimeZone}" required>
+            <option value=""></option>
             <option th:value="'Eastern'" th:text="Eastern">Eastern</option>
             <option th:value="'Central'" th:text="Central">Central</option>
             <option th:value="'Mountain'" th:text="Mountain">Mountain</option>
@@ -84,7 +86,11 @@
 
     </div>
   </form>
-  <a th:href = "@{/homepage}">Cancel</a>
+  <form th:action="@{'/polls'}" method="get" >
+    <div>
+      <button type="submit" class="btn btn-primary">Back</button>
+    </div>
+  </form>
 </div>
 
 </body>
