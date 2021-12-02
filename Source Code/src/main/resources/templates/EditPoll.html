@@ -40,8 +40,7 @@
             <td th:text="${slot.getStartTime()}">Start</td>
             <td th:text="${slot.getEndTime()}">End</td>
             <td th:text="${slot.getVotesPer()}">VotesPer</td>
-<!--            TODO: Turn below line into delete option-->
-            <td> <a th:href="@{'/poll_display/'+${slot.getSlotID()} + '/delete'}" th:text="'Delete'">Title </a></td>
+            <td> <a th:href="@{'/poll_display/'+${slot.getSlotID()} + '/delete'}" th:text="'Delete'">Delete </a></td>
 
         </tr>
 

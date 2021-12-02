@@ -42,6 +42,8 @@ public class DoodlePollController {
     @Autowired
     private RemindRepository rRepo;
 
+    private SMS phone = new SMS();
+
     //model attributes to be placed on page
     @ModelAttribute("user")
     public User userDto() {
@@ -194,6 +196,18 @@ public class DoodlePollController {
         model.addAttribute("polls",polls);
         expirePoll();
         return "pollList";
+    }
+
+    @GetMapping("/polls/delete/{id}")
+    public String deletePoll(@PathVariable(value = "id") Long id){
+        Poll selPoll = pRepo.findByPollID(id);
+//        Long pollID = selPoll.getUseID();
+
+        User currUser = getLoggedInUser();
+        User pollOwner = uRepo.findByID(selPoll.getUserID());
+        if(currUser != pollOwner){ return "redirect:/polls";}
+        pRepo.delete(selPoll);
+        return "redirect:/polls";
     }
 
     @GetMapping("/create_poll")
