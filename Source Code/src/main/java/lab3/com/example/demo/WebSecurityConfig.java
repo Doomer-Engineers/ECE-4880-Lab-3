@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/homepage")
                 .permitAll()
                 .and()
-                .logout().logoutSuccessUrl("/index").permitAll();
+                .logout().logoutSuccessUrl("/find_poll").permitAll();
 
     }
 }
