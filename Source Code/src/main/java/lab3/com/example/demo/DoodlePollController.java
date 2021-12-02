@@ -1,8 +1,10 @@
 package lab3.com.example.demo;
 
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.ParameterOutOfBoundsException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.util.DateUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -106,13 +114,54 @@ public class DoodlePollController {
             return "redirect:/index";
         }
         List<Slots> listSlots = sRepo.findByPollID(id);
-//        System.out.println(listEvents.get(0).getSlotID());
+
         model.addAttribute("pollInfo",pollInfo);
         model.addAttribute("listSlots", listSlots);
-//        User loggedInUser = getLoggedInUser();
-//        if (loggedInUser!=null) model.addAttribute("user", loggedInUser);
+
+        User user = getLoggedInUser();
+        User pollOwner = uRepo.findByID(pollInfo.getUserID());
+        if (user == pollOwner){
+            model.addAttribute("object", new bullshit());
+            return "EditPoll";
+        }
         return "pollDisplay";
     }
+
+    @PostMapping(("/poll_display/{id}/submit"))
+    public String addSlot(@ModelAttribute("object") bullshit ob, @PathVariable(value = "id") Long id) throws ParseException {
+        SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        Date startDate = sfd.parse(ob.getStart());
+
+        int len = ob.getLen();
+        int votes = ob.getVotes();
+//        Long id = p.getPollID();
+
+        System.out.println(id);
+
+        for(int i=0; i<ob.getSlots(); i++){
+            Slots newSlot = new Slots();
+
+//            System.out.println(id);
+            newSlot.setPollID(id);
+
+            newSlot.setStartTime(addMinutes(startDate,i*len));
+
+            newSlot.setEndTime(addMinutes(startDate,(1+i)*len));
+
+            newSlot.setVotesPer(votes);
+            sRepo.save(newSlot);
+        }
+
+        return "redirect:/poll_display/" + id ;
+    }
+
+    public Date addMinutes(Date date, int min) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, min);
+        return calendar.getTime();
+    }
+
 
     @GetMapping("/polls")
     public String viewPollList(Model model){
@@ -141,7 +190,8 @@ public class DoodlePollController {
         model.addAttribute("pollInput", poll);
         User user = getLoggedInUser();
         poll.setUserID(user.getId());
-        pRepo.save(poll);
+        Poll newPoll = pRepo.save(poll);
+        Long pollID = newPoll.getPollID();
         return "userIndex";
     }
 
