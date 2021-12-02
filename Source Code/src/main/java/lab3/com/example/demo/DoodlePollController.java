@@ -52,7 +52,7 @@ public class DoodlePollController {
         //this will redirect to doodle poll view
         //doodle pool view will then have sign up button
         //index page will be used for testing purposes only
-        return "redirect:/index";
+        return "redirect:/find_poll";
     }
 
     @GetMapping("/index")
@@ -167,7 +167,6 @@ public class DoodlePollController {
     public String viewPollList(Model model){
         User user = getLoggedInUser();
         if (user == null){
-            //change later to find the poll id page
             return "redirect:/find_poll";
         }
         List<Poll> polls = pRepo.findByUserID(user.getId());
