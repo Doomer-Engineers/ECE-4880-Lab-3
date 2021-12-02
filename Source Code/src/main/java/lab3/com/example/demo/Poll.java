@@ -1,6 +1,8 @@
 package lab3.com.example.demo;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -35,6 +37,7 @@ public class Poll {
 
     @Column(nullable = false, length = 45)
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     public java.util.Date Deadline;
 
     public Long getPollID() {

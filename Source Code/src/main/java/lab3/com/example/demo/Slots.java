@@ -1,6 +1,8 @@
 package lab3.com.example.demo;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -20,10 +22,12 @@ public class Slots {
 
     @Column(nullable = false, length = 45)
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private java.util.Date StartTime;
 
     @Column(nullable = false, length = 45)
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private java.util.Date EndTime;
 
     @Column(nullable = false)
