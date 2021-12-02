@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body class="p-3 mb-2 bg-dark text-white">
+
 <div class="container text-center">
     <div class=" bg-secondary text-dark rounded">
         <h1 th:text="'Title: ' + ${pollInfo.getTitle()}">Poll Title</h1>
@@ -34,6 +35,7 @@
             <td th:text="${slot.getStartTime()}">Start</td>
             <td th:text="${slot.getEndTime()}">End</td>
             <td th:text="${slot.getVotesPer()}">VotesPer</td>
+
 <!--            TODO: Turn below line into delete option-->
             <td> <form th:action="@{'/poll_display/'+${slot.getSlotID()} + '/delete'}" method="get" >
                 <div>
@@ -46,6 +48,7 @@
                 </div>
             </form></td>
 
+
         </tr>
 
         </tbody>
@@ -55,6 +58,7 @@
     <div>
         <button type="submit" class="btn btn-primary pb-2 ">Add Slots</button>
     </div>
+
     </form>
     <a th:href = "@{'/polls'}">Back</a>
 </div>

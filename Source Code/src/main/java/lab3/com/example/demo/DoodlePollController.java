@@ -42,6 +42,8 @@ public class DoodlePollController {
     @Autowired
     private RemindRepository rRepo;
 
+    private SMS phone = new SMS();
+
     //model attributes to be placed on page
     @ModelAttribute("user")
     public User userDto() {
@@ -193,6 +195,18 @@ public class DoodlePollController {
         return "pollList";
     }
 
+    @GetMapping("/polls/delete/{id}")
+    public String deletePoll(@PathVariable(value = "id") Long id){
+        Poll selPoll = pRepo.findByPollID(id);
+//        Long pollID = selPoll.getUseID();
+
+        User currUser = getLoggedInUser();
+        User pollOwner = uRepo.findByID(selPoll.getUserID());
+        if(currUser != pollOwner){ return "redirect:/polls";}
+        pRepo.delete(selPoll);
+        return "redirect:/polls";
+    }
+
     @GetMapping("/create_poll")
     public String getCreatePoll(Model model){
         User user  = getLoggedInUser();
@@ -211,8 +225,38 @@ public class DoodlePollController {
         poll.setUserID(user.getId());
         poll.setActive(false);
         poll.setExpired(false);
-        pRepo.save(poll);
+        Poll savedPoll = pRepo.save(poll);
+        Long id = savedPoll.getPollID();
         expirePoll();
+        return "redirect:/poll_display/" + id;
+    }
+
+    @GetMapping("/edit_poll/{id}")
+    public String editPollInfo(Model model, @PathVariable(value = "id") Long id){
+        Poll poll = pRepo.findByPollID(id);
+
+        User currUser = getLoggedInUser();
+        User pollOwner = uRepo.findByID(poll.getUserID());
+        if(currUser != pollOwner){ return "redirect:/polls";}
+
+        model.addAttribute("pollInfo", poll);
+        model.addAttribute("pollInput", new Poll());
+
+        return "editPollInfo";
+    }
+    @PostMapping("/edit_poll/{id}")
+    public String updatePollInfo(@ModelAttribute("pollInput") Poll poll, @PathVariable(value = "id") Long id){
+//        model.addAttribute("pollInput", poll);
+        System.out.println(poll.getTitle());
+        User user = getLoggedInUser();
+        poll.setUserID(user.getId());
+        poll.setActive(false);
+        poll.setExpired(false);
+        poll.setPollID(id);
+        pRepo.save(poll);
+//        Long id = savedPoll.getPollID();
+        expirePoll();
+
         Long id = poll.getPollID();
         return "redirect:/poll/"+ id +"/add_slots";
     }
