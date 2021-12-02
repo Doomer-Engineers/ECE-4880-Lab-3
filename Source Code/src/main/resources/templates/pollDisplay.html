@@ -6,6 +6,11 @@
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body>
+
+
+
+
+
 <div >
     <h1 th:text="'Title: ' + ${pollInfo.getTitle()}">Poll Title</h1>
     <p th:text="'Location: ' + ${pollInfo.getLocation()}">Location</p>
@@ -25,17 +30,23 @@
         </tr>
         </thead>
         <tbody>
+
         <tr th:each="slot: ${listSlots}">
 <!--            <td th:text="${slot.getSlotID()}">Slot ID</td>-->
 <!--            <td th:text="${slot.getPollID()}">Poll ID</td>-->
             <td th:text="${slot.getStartTime()}">Start</td>
             <td th:text="${slot.getEndTime()}">End</td>
             <td th:text="${slot.getVotesPer()}">VotesPer</td>
+            <td><input type="checkbox" class="boxes" th:data-max="${pollInfo.getVotesPer()}" name="cbox[]"/></td>
+
+
         </tr>
+
         </tbody>
 
         </thead>
     </table>
+
     <form th:action="@{'/find_poll'}" method="get" >
         <input type="submit" value="Back">
     </form>
@@ -43,3 +54,32 @@
 
 </body>
 </html>
+<script>
+    function limit(){
+        var count=0;
+        //Get all elements with the class name of Boxes
+        var boxes=document.getElementsByClassName('boxes');
+// ---- Or ------
+//Get all input elements with the type of checkbox.
+//var boxes=document.querySelectorAll("input[type=checkbox]");
+        //(this) is used to target the element triggering the function.
+        for(var i=0; i<boxes.length; i++){
+            //If checkbox is checked AND checkbox name is = to (this) checkbox name +1 to count
+            if(boxes[i].checked&&boxes[i].name==this.name){count++;}
+        }
+        //If count is more then data-max="" of that element, uncheck last selected element
+        if(count>this.getAttribute("data-max")){
+            this.checked=false;
+            alert("Maximum of "+this.getAttribute("data-max")+".");
+        }
+    }
+    //----Stack Overflow Snippet use---\\
+    window.onload=function(){
+        var boxes=document.getElementsByClassName('boxes');
+// Use if you don't want to add a class name to the elements
+//var boxes=document.querySelectorAll("input[type=checkbox]");
+        for(var i=0; i<boxes.length; i++){
+            boxes[i].addEventListener('change',limit,false);
+        }
+    }
+</script>
