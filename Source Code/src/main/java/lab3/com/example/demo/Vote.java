@@ -16,6 +16,9 @@ public class Vote {
     @Column(nullable = false)
     public Long SlotID;
 
+    @Column(nullable = false)
+    public Long PollID;
+
     @Column(length = 45)
     public String Email;
 
@@ -41,5 +44,13 @@ public class Vote {
 
     public void setEmail(String email) {
         Email = email;
+    }
+
+    public Long getPollID() {
+        return PollID;
+    }
+
+    public void setPollID(Long pollID) {
+        PollID = pollID;
     }
 }

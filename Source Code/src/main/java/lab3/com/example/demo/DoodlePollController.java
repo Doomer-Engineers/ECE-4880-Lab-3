@@ -1,6 +1,7 @@
 package lab3.com.example.demo;
 
 import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
+import org.dom4j.rule.Mode;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.ParameterOutOfBoundsException;
@@ -18,6 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.thymeleaf.util.DateUtils;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -26,6 +30,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 @Controller
 public class DoodlePollController {
@@ -41,8 +46,6 @@ public class DoodlePollController {
     private VoteRepository vRepo;
     @Autowired
     private RemindRepository rRepo;
-
-    private SMS phone = new SMS();
 
     //model attributes to be placed on page
     @ModelAttribute("user")
@@ -107,7 +110,7 @@ public class DoodlePollController {
         user.setRole("general");
         uRepo.save(user);
         expirePoll();
-        return "findPoll";
+        return "redirect:/find_poll";
     }
 
     //Might be nice later to get logged in user for verification
@@ -133,6 +136,7 @@ public class DoodlePollController {
 
         model.addAttribute("pollInfo",pollInfo);
         model.addAttribute("listSlots", listSlots);
+        model.addAttribute("vote",new Vote());
 
         User user = getLoggedInUser();
         User pollOwner = uRepo.findByID(pollInfo.getUserID());
@@ -273,6 +277,63 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    @PostMapping("/user/poll/{id1}/slot/{id2}/vote")
+    public String votePoll(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2, @ModelAttribute("vote") Vote vote, Model model){
+        Poll poll = pRepo.findByPollID(id1);
+        Integer maxVotes = poll.getVotesPer();
+
+        List <Slots> slots = sRepo.findByPollID(id1);
+
+        Slots slot = sRepo.findBySlotID(id2);
+        Integer maxSlot = slot.getVotesPer();
+        List<Vote> votes = vRepo.findBySlotID(id2);
+        if (votes.size() == maxSlot){
+            vote.setEmail(null);
+            model.addAttribute("pollInfo",poll);
+            model.addAttribute("listSlots", slots);
+            model.addAttribute("error", "Max votes filled for slot");
+            return "pollDisplay";
+        }
+
+        int counter = 0;
+        for (int i = 0; i < slots.size(); i ++){
+            Slots checkSlot = slots.get(i);
+            List<Vote> votes2 = vRepo.findBySlotID(checkSlot.getSlotID());
+            for (Vote checkVote : votes2) {
+                if (checkVote.getEmail().equals(vote.getEmail())) {
+                    counter++;
+                    if (counter >= maxVotes) {
+                        vote.setEmail(null);
+                        model.addAttribute("pollInfo", poll);
+                        model.addAttribute("listSlots", slots);
+                        model.addAttribute("error", "Max votes filled for poll");
+                        return "pollDisplay";
+                    }
+                }
+            }
+        }
+        vote.setPollID(id1);
+        vote.setSlotID(id2);
+        vRepo.save(vote);
+        model.addAttribute("pollInfo",poll);
+        model.addAttribute("vote", vote);
+        model.addAttribute("slot", slot);
+        return "confirmation";
+    }
+
+    @PostMapping("/user/poll/{id1}/slot/{id2}/reserve")
+    public String reserveSlot(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2, @ModelAttribute("vote") Vote vote, Model model){
+        Slots slot = sRepo.findBySlotID(id2);
+        slot.setReserved(true);
+        slot.setEmail(vote.getEmail());
+        sRepo.save(slot);
+        Poll poll = pRepo.findByPollID(id1);
+        model.addAttribute("pollInfo",poll);
+        model.addAttribute("vote", vote);
+        model.addAttribute("slot", slot);
+        return "confirmation";
+    }
+
     @PostMapping("/user/poll/{id}/delete")
     public String deletePoll(@PathVariable(value = "id") Long id){
         Poll poll = pRepo.findByPollID(id);
@@ -295,6 +356,34 @@ public class DoodlePollController {
         poll.setUserID(oldPoll.getUserID());
         pRepo.save(poll);
         expirePoll();
+        return "redirect:/polls";
+    }
+
+    @GetMapping("/user/poll/{id}/invite")
+    public String getInvitePoll(@PathVariable(value = "id") Long id, Model model){
+        Remind remind = new Remind();
+        model.addAttribute("invite", remind);
+        model.addAttribute("pollID", id);
+        return "inviteUser";
+    }
+
+
+    @PostMapping("/user/poll/{id}/invite")
+    public String invitePoll( @ModelAttribute("invite") Remind remind, @PathVariable(value = "id") Long id){
+        remind.setPollID(id);
+        rRepo.save(remind);
+        String subject = "You have been invited to Doodle Poll: " + id;
+        sendEmail(remind.getEmail(),subject);
+        return "redirect:/polls";
+    }
+
+    @PostMapping("/user/poll/{id}/remind")
+    public String remindPoll(@PathVariable(value = "id") Long id){
+        List<Remind> reminds = rRepo.findByPollID(id);
+        for (Remind remind : reminds) {
+            String subject = "Reminder: you have been invited to Doodle Poll: " + id;
+            sendEmail(remind.getEmail(), subject);
+        }
         return "redirect:/polls";
     }
 
@@ -333,6 +422,64 @@ public class DoodlePollController {
         model.addAttribute("object", obj);
         model.addAttribute("bool",bool);
         return "createPoll";
+    }
+
+
+    public void sendEmail(String email, String subject){
+
+        // Sender's email ID needs to be mentioned
+        String from = "badtimerwiki@gmail.com";
+
+        // Assuming you are sending email from through gmails smtp
+        String host = "smtp.gmail.com";
+
+        // Get system properties
+        Properties properties = System.getProperties();
+
+        // Setup mail server
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", "465");
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.auth", "true");
+
+        // Get the Session object.// and pass username and password
+        Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+
+                return new PasswordAuthentication("badtimerwiki@gmail.com", "Aren1474");
+
+            }
+
+        });
+
+        // Used to debug SMTP issues
+        session.setDebug(true);
+
+        try {
+            // Create a default MimeMessage object.
+            MimeMessage message = new MimeMessage(session);
+
+            // Set From: header field of the header.
+            message.setFrom(new InternetAddress(from));
+
+            // Set To: header field of the header.
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+
+            // Set Subject: header field
+            message.setSubject(subject);
+
+            // Now set the actual message
+            message.setText("Hi there! :) Someone sent you this link to fill out a doodle poll. Why don't you go ahead and head over there right now!");
+
+            System.out.println("sending...");
+            // Send message
+            Transport.send(message);
+            System.out.println("Sent message successfully....");
+        } catch (MessagingException mex) {
+            mex.printStackTrace();
+        }
     }
 
 }

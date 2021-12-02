@@ -33,6 +33,12 @@ public class Slots {
     @Column(nullable = false)
     private Integer VotesPer;
 
+    @Column(nullable = false)
+    private boolean reserved = false;
+
+    @Column(length = 45)
+    public String email;
+
     public Long getSlotID() {
         return SlotID;
     }
@@ -73,5 +79,19 @@ public class Slots {
         VotesPer = votesPer;
     }
 
+    public boolean isReserved() {
+        return reserved;
+    }
 
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
