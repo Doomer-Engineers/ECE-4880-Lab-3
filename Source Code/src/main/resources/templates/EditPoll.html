@@ -71,7 +71,8 @@
                 <label class="col-form-label col-4">Number of Slots</label>
                 <div class="">
                     <label>
-                        <input type="number" class="form-control" th:field="${object.slots}" required/>
+                        <input type="number" class="form-control" th:field="${object.slots}"
+                               min="1" oninput="validity.valid||(value='');"required/>
                     </label>
                 </div>
             </div>
@@ -80,7 +81,8 @@
                 <label class="col-form-label col-4">Slots Length (minutes)</label>
                 <div class="">
                     <label>
-                        <input type="number" class="form-control" th:field="${object.len}" required/>
+                        <input type="number" class="form-control" th:field="${object.len}"
+                               min="5" oninput="validity.valid||(value='');"required/>
                     </label>
                 </div>
             </div>
@@ -89,7 +91,8 @@
                 <label class="col-form-label col-4">Votes per slot</label>
                 <div class="">
                     <label>
-                        <input type="number" class="form-control" th:field="${object.votes}" required/>
+                        <input type="number" class="form-control" th:field="${object.votes}"
+                               min="1" oninput="validity.valid||(value='');"required/>
                     </label>
                 </div>
             </div>

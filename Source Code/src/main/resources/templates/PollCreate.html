@@ -31,7 +31,8 @@
         <label class="col-form-label col-4">Votes per person</label>
         <div class="">
           <label>
-            <input type="number" class="form-control" th:field="${pollInput.VotesPer}" required/>
+            <input type="number" class="form-control" th:field="${pollInput.VotesPer}"
+                   min="1" oninput="validity.valid||(value='');" required/>
           </label>
         </div>
       </div>
