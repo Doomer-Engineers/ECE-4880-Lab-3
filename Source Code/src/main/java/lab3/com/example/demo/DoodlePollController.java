@@ -20,6 +20,8 @@ import org.thymeleaf.util.DateUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +54,7 @@ public class DoodlePollController {
         //this will redirect to doodle poll view
         //doodle pool view will then have sign up button
         //index page will be used for testing purposes only
+        expirePoll();
         return "redirect:/find_poll";
     }
 
@@ -64,6 +67,7 @@ public class DoodlePollController {
     //returns signup html view for GET request
     @GetMapping("/register")
     public String getRegister(){
+        expirePoll();
         return "signup";
     }
 
@@ -74,16 +78,19 @@ public class DoodlePollController {
         User checkUserValid = uRepo.findByUsername(user.getUsername());
         if(checkUserValid != null){
             model.addAttribute("inUse", user.getUsername());
+            expirePoll();
             return "signup";
         }
         if(uvp.hasErrors(user.getPassword()) && user.getPassword() != null){
             model.addAttribute("errors", uvp.getErrors());
+            expirePoll();
             return "signup";
         }
         if(!user.getPassword().equals(uvp.getCheckPW())){
             System.out.println(user.getPassword());
             System.out.println("yeet:" + uvp.getCheckPW());
             model.addAttribute("pwError", "Password fields do not match.");
+            expirePoll();
             return "signup";
         }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -92,6 +99,7 @@ public class DoodlePollController {
         user.setStatus("active");
         user.setRole("general");
         uRepo.save(user);
+        expirePoll();
         return "index";
     }
 
@@ -111,7 +119,8 @@ public class DoodlePollController {
     public String viewPoll(Model model, @PathVariable(value = "id") Long id){
         Poll pollInfo = pRepo.findByPollID(id);
         if(pollInfo == null){
-            return "redirect:/index";
+            expirePoll();
+            return "redirect:/poll_find";
         }
         List<Slots> listSlots = sRepo.findByPollID(id);
 
@@ -122,8 +131,10 @@ public class DoodlePollController {
         User pollOwner = uRepo.findByID(pollInfo.getUserID());
         if (user == pollOwner){
             model.addAttribute("object", new bullshit());
+            expirePoll();
             return "EditPoll";
         }
+        expirePoll();
         return "pollDisplay";
     }
 
@@ -152,6 +163,7 @@ public class DoodlePollController {
             sRepo.save(newSlot);
         }
 
+        expirePoll();
         return "redirect:/poll_display/" + id ;
     }
 
@@ -167,10 +179,12 @@ public class DoodlePollController {
     public String viewPollList(Model model){
         User user = getLoggedInUser();
         if (user == null){
+            expirePoll();
             return "redirect:/find_poll";
         }
         List<Poll> polls = pRepo.findByUserID(user.getId());
         model.addAttribute("polls",polls);
+        expirePoll();
         return "pollList";
     }
 
@@ -178,10 +192,10 @@ public class DoodlePollController {
     public String getCreatePoll(Model model){
         User user  = getLoggedInUser();
         if (user == null){
-            //change later to find the poll id page
-            return "redirect:/index";
+            return "redirect:/find_poll";
         }
         model.addAttribute("pollInput", new Poll());
+        expirePoll();
         return "PollCreate";
     }
 
@@ -190,18 +204,21 @@ public class DoodlePollController {
         model.addAttribute("pollInput", poll);
         User user = getLoggedInUser();
         poll.setUserID(user.getId());
-        Poll newPoll = pRepo.save(poll);
-        Long pollID = newPoll.getPollID();
+        poll.setActive(false);
+        poll.setExpired(false);
+        pRepo.save(poll);
+        expirePoll();
         return "userIndex";
     }
 
     @GetMapping("/homepage")
-    public String userHomepage (Model model){
+    public String userHomepage (){
         User user  = getLoggedInUser();
         if (user == null){
-            //change later to find the poll id page
-            return "redirect:/index";
+            expirePoll();
+            return "redirect:/find_poll";
         }
+        expirePoll();
         return "userIndex";
     }
 
@@ -210,17 +227,67 @@ public class DoodlePollController {
         Poll poll = new Poll();
         poll.setPollID(0L);
         model.addAttribute("poll", poll);
+        expirePoll();
         return "findPoll";
     }
 
     @PostMapping("/find_poll/submit")
     public String postPoll(Model model, @ModelAttribute("poll") Poll poll){
         Poll checkPoll = pRepo.findByPollID(poll.getPollID());
-        if (checkPoll == null){
+        if (checkPoll == null || !checkPoll.isActive()){
             model.addAttribute("error", "Poll not found");
+            expirePoll();
             return "findPoll";
         }
+        expirePoll();
         return "redirect:/poll_display/" + poll.getPollID();
+    }
+
+    @PostMapping("/user/poll/{id}/publish")
+    public String publishPoll(@PathVariable(value = "id") Long id, Model model){
+        Poll poll = pRepo.findByPollID(id);
+        poll.setActive(true);
+        pRepo.save(poll);
+        String message = "Poll was successfully published";
+        model.addAttribute("message", message);
+        User user = getLoggedInUser();
+        List<Poll> polls = pRepo.findByUserID(user.getId());
+        model.addAttribute("polls",polls);
+        expirePoll();
+        return "pollList";
+    }
+
+    @PostMapping("/user/poll/{id}/unpublish")
+    public String unpublishPoll(@PathVariable(value = "id") Long id, Model model){
+        Poll poll = pRepo.findByPollID(id);
+        poll.setActive(false);
+        pRepo.save(poll);
+        String message = "Poll was successfully unpublished";
+        model.addAttribute("message", message);
+        User user = getLoggedInUser();
+        List<Poll> polls = pRepo.findByUserID(user.getId());
+        model.addAttribute("polls",polls);
+        expirePoll();
+        return "pollList";
+    }
+
+    public void expirePoll(){
+        List <Poll> polls = pRepo.findAll();
+        for (Poll poll : polls) {
+            LocalDateTime localDate = LocalDateTime.now();
+            LocalDateTime checkDate = convertToLocalDateTimeViaInstant(poll.getDeadline());
+            boolean isBeforeLocal = checkDate.isBefore(localDate);
+            if (isBeforeLocal) {
+                poll.setExpired(true);
+                pRepo.save(poll);
+            }
+        }
+    }
+
+    public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
 }
