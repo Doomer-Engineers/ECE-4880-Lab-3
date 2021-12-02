@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title>Edit Poll</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body class="p-3 mb-2 bg-dark text-white">
+<div class="container text-center">
+    <div>
+        <h1>Create Poll</h1>
+    </div>
+    <form th:action="@{'/user/poll/' + ${pollInput.pollID} +'/edit'}" method="post"
+          style="max-width: 600px; margin: 0 auto;"
+    >
+        <div class="m-3">
+            <div class="form-group row">
+                <label class="col-form-label col-4"></label>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Title</label>
+                <div class="">
+                    <label>
+                        <input type="text" class="form-control" th:field="${pollInput.Title}" required/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Votes per person</label>
+                <div class="">
+                    <label>
+                        <input type="number" class="form-control" min="1" oninput="validity.valid||(value='');" th:field="${pollInput.VotesPer}" required/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Deadline</label>
+                <div class="">
+                    <label>
+                        <input type="datetime-local" class="form-control" th:field="${pollInput.Deadline}" required/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Timezone</label>
+                <div class="">
+                    <select class="form-control" th:field="${pollInput.TimeZone}" required>
+                        <option value=""></option>
+                        <option th:value="'Eastern'" th:text="Eastern">Eastern</option>
+                        <option th:value="'Central'" th:text="Central">Central</option>
+                        <option th:value="'Mountain'" th:text="Mountain">Mountain</option>
+                        <option th:value="'Pacific'" th:text="Pacific">Pacific</option>
+                        <option th:value="'Alaska'" th:text="Alaska">Alaska</option>
+                        <option th:value="'Hawaii'" th:text="Hawaii">Hawaii</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Location (optional)</label>
+                <div class="">
+                    <label>
+                        <input type="text" class="form-control" th:field="${pollInput.Location}"/>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-4">Notes (optional)</label>
+                <div class="">
+                    <label>
+                        <input type="text" class="textarea" th:field="${pollInput.Notes}"/>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </div>
+
+        </div>
+    </form>
+    <form th:action="@{'/polls'}" method="get" >
+        <div>
+            <button type="submit" class="btn btn-primary">Back</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

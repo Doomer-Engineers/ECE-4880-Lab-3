@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .usernameParameter("username")
-                .defaultSuccessUrl("/homepage")
+                .defaultSuccessUrl("/polls")
                 .permitAll()
                 .and()
                 .logout().logoutSuccessUrl("/find_poll").permitAll();
