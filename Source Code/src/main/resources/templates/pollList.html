@@ -24,6 +24,8 @@
         <th>Activate</th>
         <th>Delete</th>
         <th>Edit</th>
+        <th>Invite</th>
+        <th>Remind</th>
     </tr>
     </thead>
     <tbody>
@@ -56,6 +58,20 @@
             <form th:action="@{'/user/poll/' + ${poll.getPollID()} + '/edit'}" method="get">
                 <div>
                     <button class="btn btn-info" type="submit">Edit</button>
+                </div>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{'/user/poll/' + ${poll.getPollID()} + '/invite'}" method="get">
+                <div>
+                    <button class="btn btn-warning" type="submit">Invite</button>
+                </div>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{'/user/poll/' + ${poll.getPollID()} + '/remind'}" method="post">
+                <div>
+                    <button class="btn btn-dark" type="submit">Remind</button>
                 </div>
             </form>
         </td>

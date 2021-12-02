@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pollInfo.getTitle()}"></title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+</head>
+<body class="p-3 mb-2 bg-dark text-white">
+
+<div class="container text-center">
+    <div class=" bg-secondary text-dark rounded">
+        <h1 th:text="'Title: ' + ${pollInfo.getTitle()}">Poll Title</h1>
+        <p th:text="'Location: ' + ${pollInfo.getLocation()}">Location</p>
+        <p th:text="'Notes: ' + ${pollInfo.getNotes()}">Notes</p>
+        <p th:text="'Time Zone: ' + ${pollInfo.getTimeZone()}">Timezone</p>
+        <p th:text="'User email: ' + ${vote.getEmail()}">Timezone</p>
+        <p th:text="'Start Time: ' + ${slot.getStartTime()}">Timezone</p>
+        <p th:text="'End Time: ' + ${slot.getEndTime()}">Timezone</p>
+    </div>
+    <form th:action="@{'/find_poll'}" method="get" >
+        <div class="pt-2">
+            <button type="submit" class="btn btn-primary ">Back</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

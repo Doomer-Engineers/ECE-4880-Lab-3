@@ -26,7 +26,6 @@
             <th>End</th>
             <th>VotesPer</th>
             <th>Delete Entry</th>
-            <th>Edit Entry</th>
         </tr>
         </thead>
         <tbody>
@@ -40,11 +39,6 @@
             <td> <form th:action="@{'/poll_display/'+${slot.getSlotID()} + '/delete'}" method="get" >
                 <div>
                     <button type="submit" class="btn btn-danger ">Delete</button>
-                </div>
-            </form></td>
-            <td> <form th:action="@{'/poll_display/'+${slot.getSlotID()} + '/info'}" method="get" >
-                <div>
-                    <button type="submit" class="btn btn-info ">Edit</button>
                 </div>
             </form></td>
 
