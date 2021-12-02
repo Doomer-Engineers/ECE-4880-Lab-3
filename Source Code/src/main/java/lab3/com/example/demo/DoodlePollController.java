@@ -304,8 +304,11 @@ public class DoodlePollController {
                     counter++;
                     if (counter >= maxVotes) {
                         vote.setEmail(null);
+                        slot.setFull(true);
+                        sRepo.save(slot);
+                        List <Slots> slots2 = sRepo.findByPollID(id1);
                         model.addAttribute("pollInfo", poll);
-                        model.addAttribute("listSlots", slots);
+                        model.addAttribute("listSlots", slots2);
                         model.addAttribute("error", "Max votes filled for poll");
                         return "pollDisplay";
                     }
@@ -354,6 +357,7 @@ public class DoodlePollController {
         poll.setExpired(oldPoll.isExpired());
         poll.setActive(oldPoll.isActive());
         poll.setUserID(oldPoll.getUserID());
+        poll.setPollID(oldPoll.getPollID());
         pRepo.save(poll);
         expirePoll();
         return "redirect:/polls";

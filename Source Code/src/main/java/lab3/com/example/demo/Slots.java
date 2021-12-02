@@ -36,6 +36,9 @@ public class Slots {
     @Column(nullable = false)
     private boolean reserved = false;
 
+    @Column(nullable = false)
+    private boolean full = false;
+
     @Column(length = 45)
     public String email;
 
@@ -93,5 +96,13 @@ public class Slots {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isFull() {
+        return full;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
     }
 }

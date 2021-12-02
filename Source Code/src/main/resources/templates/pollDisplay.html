@@ -46,7 +46,8 @@
             <td th:text="${slot.getStartTime()}">Start</td>
             <td th:text="${slot.getEndTime()}">End</td>
             <td th:text="${slot.getVotesPer()}">VotesPer</td>
-            <td><form th:action="@{'/user/poll/' + ${pollInfo.getPollID()} + '/slot/' + ${slot.getSlotID()} + '/reserve'}" method="post">
+
+            <td><form th:if="${slot.isReserved() == false}" th:action="@{'/user/poll/' + ${pollInfo.getPollID()} + '/slot/' + ${slot.getSlotID()} + '/reserve'}" method="post">
                 <div class="">
                     <label> Email
                         <input type="email" class="form-control" th:field="${vote.email}" required/>
@@ -56,14 +57,14 @@
                     <button type="submit" class="btn btn-info">Reserve</button>
                 </div>
             </form></td>
-            <td><form th:if="${slot.isReserved() == false}" th:action="@{'/user/poll/' + ${pollInfo.getPollID()} + '/slot/' + ${slot.getSlotID()} + '/vote'}" method="post" >
+            <td><form th:if="${slot.isReserved() == false && slot.isFull() == false}" th:action="@{'/user/poll/' + ${pollInfo.getPollID()} + '/slot/' + ${slot.getSlotID()} + '/vote'}" method="post" >
                 <div class="">
                     <label> Email
                         <input type="email" class="form-control" th:field="${vote.email}" required/>
                     </label>
 
                 </div>
-                <div th:if="${slot.isReserved() == false}">
+                <div>
                     <button type="submit" class="btn btn-primary">Vote</button>
                 </div>
             </form></td>
