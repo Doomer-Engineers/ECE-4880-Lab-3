@@ -14,13 +14,13 @@
 
 
     <form th:action="@{'/user/poll/' + ${pollID} +'/invite'}" method="post" >
-        <div class="m-3">
-            <div class="form-group row">
+        <div>
+            <div>
                 <label class="col-form-label col-4"></label>
             </div>
-        <div class="form-group row">
-            <label class="col-form-label col-3">Email</label>
-            <div class="">
+        <div>
+            <label>Email</label>
+            <div>
                 <label>
                     <input type="email" class="form-control" th:field="${invite.email}" required/>
                 </label>

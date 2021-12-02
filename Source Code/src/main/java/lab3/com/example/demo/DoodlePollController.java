@@ -220,7 +220,17 @@ public class DoodlePollController {
         Poll savedPoll = pRepo.save(poll);
         Long id = savedPoll.getPollID();
         expirePoll();
-        return "redirect:/poll_display/" + id;
+        return "redirect:/help/" + id;
+    }
+
+    @GetMapping("/help/{id}")
+    public String thing(Model model, @PathVariable(value = "id") Long id){
+        Poll pollInfo = pRepo.findByPollID(id);
+        List<Slots> listSlots = sRepo.findByPollID(id);
+        model.addAttribute("pollInfo",pollInfo);
+        model.addAttribute("listSlots", listSlots);
+        model.addAttribute("vote",new Vote());
+        return "things";
     }
 
 
