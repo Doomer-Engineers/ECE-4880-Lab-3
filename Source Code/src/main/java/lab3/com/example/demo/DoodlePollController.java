@@ -1,5 +1,6 @@
 package lab3.com.example.demo;
 
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.ParameterOutOfBoundsException;
@@ -131,30 +132,21 @@ public class DoodlePollController {
     public String addSlot(@ModelAttribute("object") bullshit ob, @PathVariable(value = "id") Long id) throws ParseException {
         SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         Date startDate = sfd.parse(ob.getStart());
-
         int len = ob.getLen();
         int votes = ob.getVotes();
-//        Long id = p.getPollID();
 
         System.out.println(id);
 
         for(int i=0; i<ob.getSlots(); i++){
             Slots newSlot = new Slots();
-
-//            System.out.println(id);
             newSlot.setPollID(id);
-
             newSlot.setStartTime(addMinutes(startDate,i*len));
-
             newSlot.setEndTime(addMinutes(startDate,(1+i)*len));
-
             newSlot.setVotesPer(votes);
             sRepo.save(newSlot);
         }
-
         return "redirect:/poll_display/" + id ;
     }
-
     public Date addMinutes(Date date, int min) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -162,6 +154,17 @@ public class DoodlePollController {
         return calendar.getTime();
     }
 
+    @GetMapping("/poll_display/{id}/delete")
+    public String deleteSlot(@PathVariable(value = "id") Long id){
+        Slots selSlot = sRepo.findBySlotID(id);
+        Long pollID = selSlot.getPollID();
+
+        User currUser = getLoggedInUser();
+        User pollOwner = uRepo.findByID(pRepo.findByPollID(pollID).getUserID());
+        if(currUser != pollOwner){ return "redirect:/polls";}
+        sRepo.delete(selSlot);
+        return "redirect:/poll_display/" + pollID;
+    }
 
     @GetMapping("/polls")
     public String viewPollList(Model model){
