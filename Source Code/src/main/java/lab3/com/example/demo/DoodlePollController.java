@@ -103,7 +103,7 @@ public class DoodlePollController {
     public String viewPoll(Model model, @PathVariable(value = "id") Long id){
         Poll pollInfo = pRepo.findByPollID(id);
         if(pollInfo == null){
-            return "index";
+            return "redirect:/index";
         }
         List<Slots> listSlots = sRepo.findByPollID(id);
 //        System.out.println(listEvents.get(0).getSlotID());
@@ -119,7 +119,7 @@ public class DoodlePollController {
         User user = getLoggedInUser();
         if (user == null){
             //change later to find the poll id page
-            return "redirect:/index";
+            return "redirect:/find_poll";
         }
         List<Poll> polls = pRepo.findByUserID(user.getId());
         model.addAttribute("polls",polls);
@@ -133,21 +133,17 @@ public class DoodlePollController {
             //change later to find the poll id page
             return "redirect:/index";
         }
-        Poll poll = new Poll();
-        model.addAttribute("pollInput",poll);
+        model.addAttribute("pollInput", new Poll());
         return "PollCreate";
     }
 
     @PostMapping("/create_poll")
     public String createPoll(Model model, @ModelAttribute("pollInput") Poll poll){
-        User user  = getLoggedInUser();
+        model.addAttribute("pollInput", poll);
+        User user = getLoggedInUser();
         poll.setUserID(user.getId());
         pRepo.save(poll);
-//        Long pollID = savedPoll.getPollID();
-
         return "userIndex";
-
-//        return new ModelAndView("redirect/poll_display/" + pollID.toString());
     }
 
     @GetMapping("/homepage")

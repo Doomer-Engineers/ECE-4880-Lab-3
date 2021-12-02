@@ -2,61 +2,89 @@
 <html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head lang="en">
   <meta charset="UTF-8"/>
-  <title>Poll Create</title>
+  <title>ReactJS + SignUp</title>
   <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
 </head>
 <body>
-<form method="POST">
-  <div class="container">
-    <label for="Title">Enter Title:</label>
-    <input id="Title" name = "Title" th:field="${pollInput.Title}" required><br>
-    <label for="votesperslot">Votes Per Slot:</label>
-    <input id="votesperslot" name = "votesperslot" th:field="${pollInput.VotesPer}" value="1" required><br>
-<!--    <div class="nativeDateTimePicker">-->
-<!--      <label for="meetingStart">Choose meetings start time:</label>-->
-<!--      <input type="datetime-local" id="meetingStart" name="meetingStart">-->
-<!--      <span class="validity"></span>-->
-<!--    </div>-->
-<!--    <div class="nativeDateTimePicker">-->
-<!--      <label for="meetingEnd">Choose meetings end time:</label>-->
-<!--      <input type="datetime-local" id="meetingEnd" name="meetingEnd">-->
-<!--      <span class="validity"></span>-->
-<!--    </div>-->
-<!--    <span>-->
-<!--            <label for="timeornumber">Split by time or number of slots:</label>-->
-<!--        <select id="timeornumber" name="timeornumber">-->
-<!--            <option selected>Slot Time</option>-->
-<!--            <option>Number of slots</option>-->
-<!--        </select>-->
-<!--    </span>-->
-    <span>
-        <label for="timezone">Timezone:</label>
-        <select id="timezone" name="timeornumber" th:field="${pollInput.TimeZone}">
-          <option selected th:value="'Eastern'" th:text="Eastern">Eastern</option>
-          <option th:value="'Central'" th:text="Central">Central</option>
-          <option th:value="'Mountain'" th:text="Mountain">Mountain</option>
-          <option th:value="'Pacific'" th:text="Pacific">Pacific</option>
-          <option th:value="'Alaska'" th:text="Alaska">Alaska</option>
-          <option th:value="'Hawaii'" th:text="Hawaii">Hawaii</option>
-        </select>
-    </span>
-<!--    <label for="slot">Enter time or number of slots:</label>-->
-<!--    <input id="slot" name = "slot" required><br>-->
-
-    <div class="nativeDateTimePicker">
-      <label for="deadline">Choose deadline:</label>
-      <input type="datetime-local" id="deadline" th:field="${pollInput.Deadline}" name="deadline" >
-      <span class="validity"></span>
-    </div>
-    <label for="Loc">Location:</label>
-    <input id="Loc" name = "L" th:field="${pollInput.Location}"><br>
-
-    <label for="description">Notes:</label>
-    <textarea input type="text" id="description" name = "description"  class="textarea" th:field="${pollInput.Notes}"></textarea><br>
-
-    <input type="submit" id="submit" name="submit"><br>
+<div class="container text-center">
+  <div>
+    <h1>User Registration - Sign Up</h1>
   </div>
+  <form th:action="@{/create_poll}" method="post"
+        style="max-width: 600px; margin: 0 auto;"
+  >
+    <div class="m-3">
+      <div class="form-group row">
+        <label class="col-form-label col-4"></label>
+      </div>
 
-</form>
+      <div class="form-group row">
+        <label class="col-form-label col-4">Title</label>
+        <div class="">
+          <label>
+            <input type="text" class="form-control" th:field="${pollInput.Title}" required/>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-form-label col-4">Votes per slot</label>
+        <div class="">
+          <label>
+            <input type="number" class="form-control" th:field="${pollInput.VotesPer}" required/>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-form-label col-4">Deadline</label>
+        <div class="">
+          <label>
+            <input type="datetime-local" class="form-control" th:field="${pollInput.Deadline}" required/>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-form-label col-4">Timezone</label>
+        <div class="">
+          <select class="form-control" th:field="${pollInput.TimeZone}">
+            <option th:value="'Eastern'" th:text="Eastern">Eastern</option>
+            <option th:value="'Central'" th:text="Central">Central</option>
+            <option th:value="'Mountain'" th:text="Mountain">Mountain</option>
+            <option th:value="'Pacific'" th:text="Pacific">Pacific</option>
+            <option th:value="'Alaska'" th:text="Alaska">Alaska</option>
+            <option th:value="'Hawaii'" th:text="Hawaii">Hawaii</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-form-label col-4">Location (optional)</label>
+        <div class="">
+          <label>
+            <input type="text" class="form-control" th:field="${pollInput.Location}"/>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-form-label col-4">Notes (optional)</label>
+        <div class="">
+          <label>
+            <input type="text" class="textarea" th:field="${pollInput.Notes}"/>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+
+    </div>
+  </form>
+  <a th:href = "@{/index}">Cancel</a>
+</div>
+
 </body>
 </html>
