@@ -58,7 +58,7 @@
                 </div>
             </form></td>
             <td><form th:if="${slot.isReserved() == false && slot.isFull() == false}" th:action="@{'/user/poll/' + ${pollInfo.getPollID()} + '/slot/' + ${slot.getSlotID()} + '/vote'}" method="post" >
-                <div class="">
+                <div>
                     <label> Email
                         <input type="email" class="form-control" th:field="${vote.email}" required/>
                     </label>
@@ -73,8 +73,6 @@
         </tr>
 
         </tbody>
-
-        </thead>
     </table>
 
     <form th:action="@{'/find_poll'}" method="get" >

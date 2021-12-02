@@ -287,10 +287,13 @@ public class DoodlePollController {
         Slots slot = sRepo.findBySlotID(id2);
         Integer maxSlot = slot.getVotesPer();
         List<Vote> votes = vRepo.findBySlotID(id2);
-        if (votes.size() == maxSlot){
+        if (votes.size() >= maxSlot - 1){
             vote.setEmail(null);
+            slot.setFull(true);
+            sRepo.save(slot);
+            List <Slots> slots2 = sRepo.findByPollID(id1);
             model.addAttribute("pollInfo",poll);
-            model.addAttribute("listSlots", slots);
+            model.addAttribute("listSlots", slots2);
             model.addAttribute("error", "Max votes filled for slot");
             return "pollDisplay";
         }
@@ -304,11 +307,8 @@ public class DoodlePollController {
                     counter++;
                     if (counter >= maxVotes) {
                         vote.setEmail(null);
-                        slot.setFull(true);
-                        sRepo.save(slot);
-                        List <Slots> slots2 = sRepo.findByPollID(id1);
                         model.addAttribute("pollInfo", poll);
-                        model.addAttribute("listSlots", slots2);
+                        model.addAttribute("listSlots", slots);
                         model.addAttribute("error", "Max votes filled for poll");
                         return "pollDisplay";
                     }
