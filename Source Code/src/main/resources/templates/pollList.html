@@ -23,6 +23,7 @@
         <th>VotesPer</th>
         <th>Activate</th>
         <th>Delete</th>
+        <th>Edit</th>
     </tr>
     </thead>
     <tbody>
@@ -51,8 +52,13 @@
                 </div>
             </form>
         </td>
-        <td> <a th:href="@{'/polls/delete/'+${poll.getPollID()}}" th:text="'Delete'">Title </a></td>
-
+        <td>
+            <form th:action="@{'/user/poll/' + ${poll.getPollID()} + '/edit'}" method="get">
+                <div>
+                    <button class="btn btn-info" type="submit">Edit</button>
+                </div>
+            </form>
+        </td>
 
     </tr>
     </tbody>
