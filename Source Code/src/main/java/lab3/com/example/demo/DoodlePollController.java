@@ -35,6 +35,10 @@ public class DoodlePollController {
     private PollRepository pRepo;
     @Autowired
     private SlotsRepository sRepo;
+    @Autowired
+    private VoteRepository vRepo;
+    @Autowired
+    private RemindRepository rRepo;
 
     //model attributes to be placed on page
     @ModelAttribute("user")
