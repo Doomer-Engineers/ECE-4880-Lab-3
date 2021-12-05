@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface RemindRepository extends JpaRepository<Remind, Long> {
 
-    //search queries
+    //search queries:
     @Query("SELECT r FROM Remind r WHERE r.RemindID = ?1")
     lab3.com.example.demo.Remind findByRemindID(Long RemindID);
 

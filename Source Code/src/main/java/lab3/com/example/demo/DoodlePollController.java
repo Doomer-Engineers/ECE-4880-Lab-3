@@ -47,7 +47,7 @@ public class DoodlePollController {
     @Autowired
     private RemindRepository rRepo;
 
-    //model attributes to be placed on page
+    //model attributes to be placed on page.
     @ModelAttribute("user")
     public User userDto() {
         return new User();
@@ -61,20 +61,20 @@ public class DoodlePollController {
     //default
     @GetMapping("")
     public String defaultRequest(){
-        //this will redirect to doodle poll view
-        //doodle pool view will then have sign up button
-        //index page will be used for testing purposes only
+        //this will redirect to doodle poll view.
+        //doodle pool view will then have sign up button.
+        //index page will be used for testing purposes only.
         expirePoll();
         return "redirect:/find_poll";
     }
 
     @GetMapping("/index")
     public String getIndex(){
-        //index page will be used for testing purposes only
+        //index page will be used for testing purposes only.
         return "index";
     }
 
-    //returns signup html view for GET request
+    //returns signup html view for GET request.
     @GetMapping("/register")
     public String getRegister(){
         expirePoll();
@@ -113,7 +113,7 @@ public class DoodlePollController {
         return "redirect:/find_poll";
     }
 
-    //Might be nice later to get logged in user for verification
+    //Might be nice later to get logged in user for verification.
     public User getLoggedInUser(){
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -441,13 +441,13 @@ public class DoodlePollController {
 
     public void sendEmail(String email, String subject){
 
-        // Sender's email ID needs to be mentioned
+        // Sender's email ID needs to be mentioned.
         String from = "badtimerwiki@gmail.com";
 
-        // Assuming you are sending email from through gmails smtp
+        // Assuming you are sending email from through gmails smtp.
         String host = "smtp.gmail.com";
 
-        // Get system properties
+        // Get system properties.
         Properties properties = System.getProperties();
 
         // Setup mail server
@@ -456,7 +456,7 @@ public class DoodlePollController {
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.auth", "true");
 
-        // Get the Session object.// and pass username and password
+        // Get the Session object.// and pass username and password.
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             @Override
@@ -468,7 +468,7 @@ public class DoodlePollController {
 
         });
 
-        // Used to debug SMTP issues
+        // Used to debug SMTP issues.
         session.setDebug(true);
 
         try {
@@ -481,14 +481,14 @@ public class DoodlePollController {
             // Set To: header field of the header.
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
-            // Set Subject: header field
+            // Set Subject: header field.
             message.setSubject(subject);
 
-            // Now set the actual message
+            // Now set the actual message.
             message.setText("Hi there! :) Someone sent you this link to fill out a doodle poll. Why don't you go ahead and head over there right now!");
 
             System.out.println("sending...");
-            // Send message
+            // Send message.
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {

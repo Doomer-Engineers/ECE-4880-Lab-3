@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-    //can play with url once other parts of app are built
+    //can play with url once other parts of app are built.
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()

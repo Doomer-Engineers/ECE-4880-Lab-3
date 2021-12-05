@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "poll")
 public class Poll {
-    //Model in MVC
+    //Model in MVC.
 
     //PK
     @Id

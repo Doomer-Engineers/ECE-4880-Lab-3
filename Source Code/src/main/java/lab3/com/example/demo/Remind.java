@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "remind")
 public class Remind {
-    //Model in MVC
+    //Model in MVC.
 
     //PK
     @Id

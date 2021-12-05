@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VoteRepository extends JpaRepository<Vote, Long> {
-    //search queries
+    //search queries:
     @Query("SELECT v FROM Vote v WHERE v.VoteID = ?1")
     lab3.com.example.demo.Vote findByVoteID(Long VoteID);
 

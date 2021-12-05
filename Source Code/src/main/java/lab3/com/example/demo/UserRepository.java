@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
-    //search queries
+    //search queries:
     @Query("SELECT u FROM User u WHERE u.username = ?1")
     lab3.com.example.demo.User findByUsername(String username);
 

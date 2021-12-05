@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface PollRepository extends JpaRepository<Poll, Long> {
-    //search queries
+    //search queries.
     @Query("SELECT p FROM Poll p WHERE p.PollID = ?1")
     lab3.com.example.demo.Poll findByPollID(Long PollID);
 
