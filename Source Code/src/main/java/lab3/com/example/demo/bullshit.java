@@ -7,6 +7,7 @@ public class bullshit {
     public int votes;
     private Long id;
 
+    //getters and setters for bullshit
     public Long getId() {
         return id;
     }

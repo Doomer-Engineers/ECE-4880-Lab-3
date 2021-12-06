@@ -9,9 +9,9 @@ import java.util.Date;
 @Entity
 @Table(name = "slots")
 public class Slots {
-    //Model in MVC
+    //Model in MVC.
 
-    //PK
+    //PK.
     @Id
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,7 @@ public class Slots {
     @Column(length = 45)
     public String email;
 
+    //getters and setters for Slots
     public Long getSlotID() {
         return SlotID;
     }

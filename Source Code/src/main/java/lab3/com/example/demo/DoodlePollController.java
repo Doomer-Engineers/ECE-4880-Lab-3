@@ -34,8 +34,9 @@ import java.util.Properties;
 
 @Controller
 public class DoodlePollController {
-    //autowired repos here
-    //need repos created
+    //autowired repos here.
+    //need repos created.
+
     @Autowired
     private UserRepository uRepo;
     @Autowired
@@ -47,7 +48,7 @@ public class DoodlePollController {
     @Autowired
     private RemindRepository rRepo;
 
-    //model attributes to be placed on page.
+    //model attributes to be placed on page..
     @ModelAttribute("user")
     public User userDto() {
         return new User();
@@ -56,9 +57,9 @@ public class DoodlePollController {
     @ModelAttribute("uvp")
     public ValidPassword pwDto() { return new ValidPassword(); }
 
-    //HTTP requests and responses
+    //HTTP requests and responses.
 
-    //default
+    //default.
     @GetMapping("")
     public String defaultRequest(){
         //this will redirect to doodle poll view.
@@ -70,18 +71,18 @@ public class DoodlePollController {
 
     @GetMapping("/index")
     public String getIndex(){
-        //index page will be used for testing purposes only.
+        //index page will be used for testing purposes only..
         return "index";
     }
 
-    //returns signup html view for GET request.
+    //returns signup html view for GET request..
     @GetMapping("/register")
     public String getRegister(){
         expirePoll();
         return "signup";
     }
 
-    //once user submits view, the page will come here.
+    //once user submits view, the page will come here..
     @PostMapping("/register")
     public String processRegistration(@ModelAttribute("user") User user, Model model, @ModelAttribute("uvp") ValidPassword uvp){
 
@@ -113,7 +114,7 @@ public class DoodlePollController {
         return "redirect:/find_poll";
     }
 
-    //Might be nice later to get logged in user for verification.
+    //Might be nice later to get logged in user for verification..
     public User getLoggedInUser(){
         String username;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -125,6 +126,7 @@ public class DoodlePollController {
         return uRepo.findByUsername(username);
     }
 
+    //mapping to display polls
     @GetMapping("/poll_display/{id}")
     public String viewPoll(Model model, @PathVariable(value = "id") Long id){
         Poll pollInfo = pRepo.findByPollID(id);
@@ -149,6 +151,7 @@ public class DoodlePollController {
         return "pollDisplay";
     }
 
+    //submit mapping
     @PostMapping(("/poll_display/{id}/submit"))
     public String addSlot(@ModelAttribute("object") bullshit ob, @PathVariable(value = "id") Long id) throws ParseException {
         SimpleDateFormat sfd = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -167,6 +170,7 @@ public class DoodlePollController {
 
         return "redirect:/poll_display/" + id ;
     }
+
     public Date addMinutes(Date date, int min) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -174,6 +178,7 @@ public class DoodlePollController {
         return calendar.getTime();
     }
 
+    //delete mapping
     @GetMapping("/poll_display/{id}/delete")
     public String deleteSlot(@PathVariable(value = "id") Long id){
         Slots selSlot = sRepo.findBySlotID(id);
@@ -186,6 +191,7 @@ public class DoodlePollController {
         return "redirect:/poll_display/" + pollID;
     }
 
+    //polls mapping
     @GetMapping("/polls")
     public String viewPollList(Model model){
         User user = getLoggedInUser();
@@ -199,6 +205,7 @@ public class DoodlePollController {
         return "pollList";
     }
 
+    //mapping to create polls
     @GetMapping("/create_poll")
     public String getCreatePoll(Model model){
         User user  = getLoggedInUser();
@@ -210,6 +217,7 @@ public class DoodlePollController {
         return "PollCreate";
     }
 
+    //create polls mapping
     @PostMapping("/create_poll")
     public String createPoll(Model model, @ModelAttribute("pollInput") Poll poll){
         model.addAttribute("pollInput", poll);
@@ -223,6 +231,7 @@ public class DoodlePollController {
         return "redirect:/help/" + id;
     }
 
+    //help mapping
     @GetMapping("/help/{id}")
     public String thing(Model model, @PathVariable(value = "id") Long id){
         Poll pollInfo = pRepo.findByPollID(id);
@@ -233,7 +242,7 @@ public class DoodlePollController {
         return "things";
     }
 
-
+    //homepage mapping
     @GetMapping("/homepage")
     public String userHomepage (){
         User user  = getLoggedInUser();
@@ -245,6 +254,7 @@ public class DoodlePollController {
         return "userIndex";
     }
 
+    //mapping to find polls
     @GetMapping("/find_poll")
     public String getPoll(Model model){
         Poll poll = new Poll();
@@ -254,6 +264,7 @@ public class DoodlePollController {
         return "findPoll";
     }
 
+    //searching for polls mapping
     @PostMapping("/find_poll/submit")
     public String postPoll(Model model, @ModelAttribute("poll") Poll poll){
         Poll checkPoll = pRepo.findByPollID(poll.getPollID());
@@ -271,6 +282,7 @@ public class DoodlePollController {
         return "redirect:/poll_display/" + poll.getPollID();
     }
 
+    //publish polls mapping
     @PostMapping("/user/poll/{id}/publish")
     public String publishPoll(@PathVariable(value = "id") Long id, Model model){
         Poll poll = pRepo.findByPollID(id);
@@ -279,6 +291,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //unpublish polls mapping
     @PostMapping("/user/poll/{id}/unpublish")
     public String unpublishPoll(@PathVariable(value = "id") Long id, Model model){
         Poll poll = pRepo.findByPollID(id);
@@ -287,6 +300,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //vote mapping
     @PostMapping("/user/poll/{id1}/slot/{id2}/vote")
     public String votePoll(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2, @ModelAttribute("vote") Vote vote, Model model){
         Poll poll = pRepo.findByPollID(id1);
@@ -334,6 +348,7 @@ public class DoodlePollController {
         return "confirmation";
     }
 
+    //reserve slot mapping
     @PostMapping("/user/poll/{id1}/slot/{id2}/reserve")
     public String reserveSlot(@PathVariable(value = "id1") Long id1, @PathVariable(value = "id2") Long id2, @ModelAttribute("vote") Vote vote, Model model){
         Slots slot = sRepo.findBySlotID(id2);
@@ -347,6 +362,7 @@ public class DoodlePollController {
         return "confirmation";
     }
 
+    //delete poll mapping
     @PostMapping("/user/poll/{id}/delete")
     public String deletePoll(@PathVariable(value = "id") Long id){
         Poll poll = pRepo.findByPollID(id);
@@ -354,6 +370,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //edit polls mapping
     @GetMapping("/user/poll/{id}/edit")
     public String getEditPoll(@PathVariable(value = "id") Long id, Model model){
         Poll poll = pRepo.findByPollID(id);
@@ -361,6 +378,7 @@ public class DoodlePollController {
         return "realPollEdit";
     }
 
+    //edit polls mapping
     @PostMapping("/user/poll/{id}/edit")
     public String editPoll(@ModelAttribute("pollInput") Poll poll, @PathVariable(value = "id") Long id){
         Poll oldPoll = pRepo.findByPollID(id);
@@ -373,6 +391,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //invite to poll mapping
     @GetMapping("/user/poll/{id}/invite")
     public String getInvitePoll(@PathVariable(value = "id") Long id, Model model){
         Remind remind = new Remind();
@@ -381,7 +400,7 @@ public class DoodlePollController {
         return "inviteUser";
     }
 
-
+    //invite mapping
     @PostMapping("/user/poll/{id}/invite")
     public String invitePoll( @ModelAttribute("invite") Remind remind, @PathVariable(value = "id") Long id){
         remind.setPollID(id);
@@ -391,6 +410,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //remind mapping
     @PostMapping("/user/poll/{id}/remind")
     public String remindPoll(@PathVariable(value = "id") Long id){
         List<Remind> reminds = rRepo.findByPollID(id);
@@ -401,6 +421,7 @@ public class DoodlePollController {
         return "redirect:/polls";
     }
 
+    //to expire polls
     public void expirePoll(){
         List <Poll> polls = pRepo.findAll();
         for (Poll poll : polls) {
@@ -412,17 +433,20 @@ public class DoodlePollController {
         }
     }
 
+    //converting time
     public LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
 
+    //redirects to login
     @GetMapping("sudoLogin")
     public String sudoLogin(){
         return "redirect:/login";
     }
 
+    //add slots mapping
     @GetMapping("/poll/{id}/add_slots")
     public String addSlots(@PathVariable(value = "id") Long id, Model model){
         Poll poll = pRepo.findByPollID(id);
@@ -439,24 +463,25 @@ public class DoodlePollController {
     }
 
 
+    //to send email
     public void sendEmail(String email, String subject){
 
-        // Sender's email ID needs to be mentioned.
+        //Sender's email ID needs to be mentioned.
         String from = "badtimerwiki@gmail.com";
 
-        // Assuming you are sending email from through gmails smtp.
+        //Assuming you are sending email from through gmails smtp.
         String host = "smtp.gmail.com";
 
-        // Get system properties.
+        //Get system properties.
         Properties properties = System.getProperties();
 
-        // Setup mail server
+        //Setup mail server
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port", "465");
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.auth", "true");
 
-        // Get the Session object.// and pass username and password.
+        //Get the Session object.// and pass username and password.
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 
             @Override
@@ -468,27 +493,27 @@ public class DoodlePollController {
 
         });
 
-        // Used to debug SMTP issues.
+        //Used to debug SMTP issues.
         session.setDebug(true);
 
         try {
-            // Create a default MimeMessage object.
+            //Create a default MimeMessage object.
             MimeMessage message = new MimeMessage(session);
 
-            // Set From: header field of the header.
+            //Set From: header field of the header.
             message.setFrom(new InternetAddress(from));
 
-            // Set To: header field of the header.
+            //Set To: header field of the header.
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
-            // Set Subject: header field.
+            //Set Subject: header field.
             message.setSubject(subject);
 
-            // Now set the actual message.
+            //Now set the actual message.
             message.setText("Hi there! :) Someone sent you this link to fill out a doodle poll. Why don't you go ahead and head over there right now!");
 
             System.out.println("sending...");
-            // Send message.
+            //Send message.
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException mex) {

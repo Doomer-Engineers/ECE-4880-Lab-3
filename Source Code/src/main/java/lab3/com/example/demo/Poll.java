@@ -9,9 +9,9 @@ import java.util.Date;
 @Entity
 @Table(name = "poll")
 public class Poll {
-    //Model in MVC.
+    //Model in MVC..
 
-    //PK
+    //PK.
     @Id
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

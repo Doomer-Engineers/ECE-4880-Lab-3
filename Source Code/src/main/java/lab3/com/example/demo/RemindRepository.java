@@ -7,10 +7,11 @@ import java.util.List;
 
 public interface RemindRepository extends JpaRepository<Remind, Long> {
 
-    //search queries:
+    //search query for RemindID
     @Query("SELECT r FROM Remind r WHERE r.RemindID = ?1")
     lab3.com.example.demo.Remind findByRemindID(Long RemindID);
 
+    //search query for PollID
     @Query("SELECT r FROM Remind r WHERE r.PollID = ?1")
     List<Remind> findByPollID(Long PollID);
 }

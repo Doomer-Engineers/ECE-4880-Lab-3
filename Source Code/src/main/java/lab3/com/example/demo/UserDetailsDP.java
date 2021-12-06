@@ -17,12 +17,12 @@ public class UserDetailsDP implements org.springframework.security.core.userdeta
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
-
+    //getter for password
     @Override
     public String getPassword() {
         return user.getPassword();
     }
-
+    //getter for username
     @Override
     public String getUsername() {
         return user.getUsername();

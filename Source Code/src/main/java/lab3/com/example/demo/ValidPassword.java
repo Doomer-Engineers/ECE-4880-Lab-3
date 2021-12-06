@@ -39,18 +39,23 @@ public class ValidPassword {
                 specialCase.append(c);
             }
         }
+        //checks if there is a digit in the password
         if (numbers.length() == 0){
             errors.add("Please add a digit to password");
         }
+        //checks if there is an uppercase letter in the password
         if (upLetters.length() == 0){
             errors.add("Please add a uppercase letter to password");
         }
+        //checks if there is a lowercase letter in the password
         if (lowLetters.length() == 0){
             errors.add("Please add a lowercase letter to password");
         }
+        //checks if there is a special character in the password
         if (specialCase.length() == 0){
             errors.add("Please add a special character to password");
         }
+        //checks if there is whitespace in the password
         if (whiteSpace != 0){
             errors.add("Please remove the white space");
         }

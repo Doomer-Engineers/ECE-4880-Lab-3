@@ -21,6 +21,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new lab3.com.example.demo.UserService();
     }
 
+    //password encryption
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -40,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-    //can play with url once other parts of app are built.
+    //we can play with url once other parts of app are built.
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()

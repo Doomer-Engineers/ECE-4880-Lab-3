@@ -5,9 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "remind")
 public class Remind {
-    //Model in MVC.
+    //Model in MVC..
 
-    //PK
+    //PK.
     @Id
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
